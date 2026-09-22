@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    color-scheme: light;
+    /* Витрина спроектирована под телефон: системный тёмный режим не
+       переключаем, иначе жёлтый акцент теряет контраст на чёрном. */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-surface-2 text-ink antialiased;
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  }
+
+  /* Экран целиком прокручивается под таб-баром, поэтому убираем
+     инерционный «отскок» у фиксированных панелей. */
+  input, textarea, select, button { font-family: inherit; }
+
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+  ::-webkit-scrollbar { width: 0; height: 0; }
+}
+
+@layer components {
+  /* ── Каркас телефона ──────────────────────────────────────────────
+     Макет только мобильный: на широком экране колонка центрируется,
+     а не растягивается — верстать десктопные раскладки незачем. */
+  .phone-shell {
+    @apply mx-auto flex min-h-screen w-full max-w-[440px] flex-col bg-surface;
+    box-shadow: 0 0 0 1px theme('colors.line');
+  }
+
+  .screen {
+    /* Нижний отступ = высота таб-бара + запас под home indicator. */
+    @apply flex-1 px-4 pb-28 pt-2;
+  }
+
+  /* ── Поля ввода ───────────────────────────────────────────────── */
+  .field {
+    @apply w-full rounded-full border border-line bg-surface px-4 py-3 text-[15px] text-ink
+           outline-none transition-colors placeholder:text-muted
+           focus:border-line-2 focus:ring-4 focus:ring-accent/20;
+  }
+
+  .field-box {
+    @apply w-full rounded-tile border border-line bg-surface px-4 py-3 text-[15px] text-ink
+           outline-none transition-colors placeholder:text-muted
+           focus:border-line-2 focus:ring-4 focus:ring-accent/20;
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-[13px] font-medium text-ink-2;
+  }
+
+  /* ── Кнопки ───────────────────────────────────────────────────── */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3.5
+           text-[15px] font-semibold transition-all active:scale-[0.98]
+           disabled:pointer-events-none disabled:opacity-40;
+  }
+
+  /* Главное действие экрана — чёрная пилюля, как «Shop Now» в макете. */
+  .btn-primary { @apply btn bg-ink text-white hover:bg-ink/90; }
+
+  /* Жёлтым метим только покупку: «в корзину», «оплатить». */
+  .btn-accent  { @apply btn bg-accent text-ink hover:bg-accent-2; }
+
+  .btn-ghost   { @apply btn border border-line bg-surface text-ink hover:bg-surface-2; }
+
+  .btn-sm      { @apply rounded-full px-4 py-2 text-[13px] font-semibold; }
+
+  /* Круглая иконочная кнопка: поиск, корзина на карточке, назад. */
+  .icon-btn {
+    @apply inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full
+           border border-line bg-surface text-ink transition-colors
+           hover:bg-surface-2 active:scale-95;
+  }
+
+  /* ── Карточки и чипы ──────────────────────────────────────────── */
+  .card { @apply rounded-card border border-line bg-surface; }
+
+  .tile { @apply rounded-tile bg-surface-2; }
+
+  .chip {
+    @apply inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full
+           border border-line bg-surface px-4 py-2.5 text-[14px] font-medium text-ink-2
+           transition-colors active:scale-[0.98];
+  }
+
+  .chip-active { @apply border-accent bg-accent text-ink; }
+
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold;
+  }
+
+  /* ── Служебное ────────────────────────────────────────────────── */
+  .skeleton {
+    @apply rounded-tile bg-surface-2;
+    background-image: linear-gradient(
+      90deg,
+      theme('colors.surface-2') 0%,
+      theme('colors.surface-3') 50%,
+      theme('colors.surface-2') 100%
+    );
+    background-size: 200% 100%;
+    @apply animate-shimmer;
+  }
+
+  .section-title { @apply text-[17px] font-bold tracking-tight text-ink; }
+
+  .link-more { @apply inline-flex items-center gap-0.5 text-[13px] font-medium text-ink-2; }
+
+  /* Горизонтальные ряды (чипы, подборки) скроллятся без полосы. */
+  .scroll-row {
+    @apply -mx-4 flex gap-2 overflow-x-auto px-4 pb-1;
+    scrollbar-width: none;
+  }
+  .scroll-row::-webkit-scrollbar { display: none; }
+}
